@@ -2,7 +2,7 @@
   <name>rm Raiden (World set 2, newer hardware)</name>
   <setname>raidenb</setname>
   <mameversion>0264</mameversion>
-  <rbf>Raiden_Streamer</rbf>
+  <rbf>rmRaiden</rbf>
   <year>1990</year>
   <manufacturer>Seibu Kaihatsu</manufacturer>
   <category>Shoot</category>

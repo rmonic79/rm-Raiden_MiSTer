@@ -1,8 +1,8 @@
 <misterromdescription>
-  <name>rm Raiden (US set 1)</name>
-  <setname>raidenu</setname>
+  <name>rm Raiden (Taiwan)</name>
+  <setname>raident</setname>
   <mameversion>0264</mameversion>
-  <rbf>Raiden_Streamer</rbf>
+  <rbf>rmRaiden</rbf>
   <year>1990</year>
   <manufacturer>Seibu Kaihatsu</manufacturer>
   <category>Shoot</category>
@@ -46,7 +46,7 @@
   <rom index="1">
     <part>00</part>
   </rom>
-  <rom index="0" zip="raidenu.zip|raiden.zip" md5="None">
+  <rom index="0" zip="raident.zip|raiden.zip" md5="None">
     <!-- ============================================================
          Layout SDRAM CALCOLATO matematicamente da file size + map MRA:
            - interleave 16-bit di 2 part: SDRAM size = 2 × file_size
@@ -91,8 +91,8 @@
 
     <!-- Main 2: 0x020000-0x05FFFF (256K) - CRC MAME originali (encryption runtime) -->
     <interleave output="16">
-      <part name="3a.u022" crc="a8fadbdd" map="01"/>
-      <part name="4a.u023" crc="bafb268d" map="10"/>
+      <part name="3.u022"  crc="f6af09d0" map="01"/>
+      <part name="4t.u023" crc="61eefab1" map="10"/>
     </interleave>
 
     <!-- Sub V30: 0x060000-0x09FFFF (256K) - CRC MAME originali -->

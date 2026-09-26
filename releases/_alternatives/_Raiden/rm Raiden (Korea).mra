@@ -2,7 +2,7 @@
   <name>rm Raiden (Korea)</name>
   <setname>raidenk</setname>
   <mameversion>0264</mameversion>
-  <rbf>Raiden_Streamer</rbf>
+  <rbf>rmRaiden</rbf>
   <year>1990</year>
   <manufacturer>Seibu Kaihatsu</manufacturer>
   <category>Shoot</category>

@@ -5,7 +5,7 @@
 # il Raiden.rbf base (quello resta per l'upload MiSTer).
 
 set out_dir "output_files"
-set base    "Raiden_Streamer"
+set base    "rmRaiden"
 set src     "$out_dir/$base.rbf"
 
 if {![file exists $src]} {

@@ -1,39 +1,65 @@
-# Arcade-Raiden_MiSTer — Streamer edition
+# rm_Raiden_MiSTer
 
 FPGA core for **Raiden** (Seibu Kaihatsu, 1990) targeting the
 [MiSTer FPGA](https://github.com/MiSTer-devel) platform (Terasic DE10-Nano).
 
-> ### What this edition is
->
-> This is the **Streamer** edition of the Raiden core. The game, the CPUs, the
-> video, the audio and the savestates are **identical** to the released core —
-> the only difference is *where* the analog geometry stages live.
->
-> **What you gain: HDMI stays bit-identical while you fit the picture to a CRT.**
-> In the released core the CRT Adjust modules sit inside the core, so the whole
-> video path is adjusted and HDMI follows the stretch — which is fine on a CRT,
-> but means you cannot have a clean HDMI image and an adjusted analog one at the
-> same time. Here `crt_vsize` and `crt_adjust_sys` sit inside `sys_top` on the
-> **analog DAC branch only**, and the HDMI scaler taps the stream above them: it
-> never sees any of it.
->
-> **Why it is not on MiSTer-devel.** Doing this means editing `sys/`, the shared
-> framework, and the MiSTer-devel guidelines say the framework must not be
-> modified. That rule exists for good reasons, so the **released core stays
-> core-side and fully compliant** and lives at
-> [Arcade-Raiden_MiSTer](https://github.com/rmonic79/Arcade-Raiden_MiSTer);
-> this edition is kept apart, in its own repository, for people who want the
-> HDMI output untouched while they dial in a tube. It is not a fork you should
-> submit anywhere: it is a deliberate departure.
->
-> **Naming, so the two can live together.** The bitstream is
-> `Raiden_Streamer.rbf` and the MRA files are prefixed **`rm`** (for *rmonic*) —
-> `rm Raiden (World).mra` and so on. Nothing overwrites the standard core: you
-> can keep both on the same SD card and the Streamer entries group together in
-> the arcade list.
->
-> **One extra refinement**, since the read side runs in the framework's video
-> domain: the H-Size step here is **0.78 %** instead of 1.56 %.
+---
+
+# The `rm` version
+
+*This section is the same in every `rm` core: it explains what the line is and
+what it adds. Skip it if you already know.*
+
+**`rm` cores are my own builds, published outside the MiSTer-devel tree.** They
+are not a fork of the emulation: the core is the same one I contribute
+upstream, plus two things the official tree cannot host, because both require
+editing the `sys/` framework and MiSTer-devel does not take those changes.
+
+### 1. CRT geometry that leaves HDMI alone
+
+**CRT Adjust** (H-Size, H-Position, V-Shift) and **CRT V-Size** let you align
+and size the picture on a 15 kHz tube from the OSD, with the sync left native
+so the screen never loses lock, and without duplicating or dropping a single
+line.
+
+The point of the whole thing is *where* they sit: **sys-side**, in the analog
+chain between the scanline stage and the OSD. The scaler taps the video
+**before** that point, so **HDMI stays bit-identical while you adjust the
+CRT** — you can align a tube without touching what a capture card or a
+streaming setup sees. Putting the same modules inside the core would drag HDMI
+along with every correction, which defeats the purpose.
+
+V-Size offers two modes: **PVM** (retimes the lines — perfect on broadcast
+monitors with a wide lock range) and **Cabinet** (native timing, photometric —
+the sync stays rock-steady on arcade chassis with tight AFC).
+
+Because the read side runs in the framework's video domain, the H-Size step
+here is **0.78 %** instead of 1.56 %.
+
+### 2. Pause overlay
+
+Logo, supporters list and scrolling credits, shown while the game is paused.
+
+### Naming
+
+| | |
+|---|---|
+| repository / folder | `rm_<Title>_MiSTer` |
+| Quartus project and RBF | `rm<Title>` |
+| MRA files | `rm <Title> (…).mra` |
+
+The `rm` RBF has a **different file name** from the official core, so the two
+can sit on the same SD card without overwriting each other, and you choose
+which one to launch from the MRA.
+
+### What the MiSTer-devel version has instead
+
+Everything else, identically: savestates, audio work, video fixes, hardware
+accuracy. What it does **not** have is the CRT geometry controls and the pause
+overlay — the two items above. The compliant core lives at
+[Arcade-Raiden_MiSTer](https://github.com/rmonic79/Arcade-Raiden_MiSTer).
+
+---
 
 Raiden runs on **Seibu Kaihatsu hardware** — a vertical arcade board with
 two NEC V30 CPUs (main + sub), a Z80 sound CPU, background / foreground
@@ -222,7 +248,7 @@ scaling artifact** on the analog output.
 In this edition the stages are wired **inside `sys_top`, on the analog DAC
 branch only**: the HDMI scaler taps the video stream above the insertion point,
 so **HDMI stays bit-identical** no matter how you set H-Size, H-Position,
-V-Shift or V-Size. That is the whole point of the Streamer edition — and the
+V-Shift or V-Size. That is the whole point of the `rm` line — and the
 reason it cannot be published under MiSTer-devel, whose guidelines forbid
 touching `sys/`. The released core does the same job core-side, where HDMI
 follows the adjust and you leave the option Off for a clean HDMI image.
@@ -302,10 +328,10 @@ Marked **experimental** — see *Known issues*.
 Requires Quartus Prime 17.0 (free Lite Edition).
 
 ```
-Open Raiden_Streamer.qpf in Quartus → Processing → Start Compilation
+Open rmRaiden.qpf in Quartus → Processing → Start Compilation
 ```
 
-Output bitstream is generated in `output_files/Raiden_Streamer.rbf`.
+Output bitstream is generated in `output_files/rmRaiden.rbf`.
 
 ## Running on MiSTer
 
@@ -318,7 +344,7 @@ The [releases/](releases/) folder contains the MRA files and a prebuilt RBF:
 
 Steps:
 
-1. Copy `Raiden_Streamer.rbf` to `_Arcade/cores/` on the MiSTer SD card (or keep
+1. Copy `rmRaiden.rbf` to `_Arcade/cores/` on the MiSTer SD card (or keep
    the dated name and update the MRA accordingly). It does **not** overwrite the
    standard core, so both can coexist.
 2. Copy the `rm ...mra` files to `_Arcade/` on the MiSTer SD card (alternates in
@@ -351,8 +377,8 @@ Arcade-Raiden_MiSTer/
 ├── logo/            OSD overlay assets
 ├── docs/            In-game screenshots
 ├── releases/        MRA files + prebuilt RBF
-├── Raiden_Streamer.qpf  Quartus project
-├── Raiden_Streamer.qsf  Quartus assignments
+├── rmRaiden.qpf  Quartus project
+├── rmRaiden.qsf  Quartus assignments
 ├── Raiden.sv        Top-level core wrapper
 ├── Template.sdc     Timing constraints
 ├── files.qip        HDL file list
